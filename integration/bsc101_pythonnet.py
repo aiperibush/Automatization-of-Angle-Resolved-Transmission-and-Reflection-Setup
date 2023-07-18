@@ -8,7 +8,6 @@ import os
 import time
 import sys
 import clr
-from clr import System
 
 clr.AddReference("C:\\Program Files\\Thorlabs\\Kinesis\\Thorlabs.MotionControl.DeviceManagerCLI.dll")
 clr.AddReference("C:\\Program Files\\Thorlabs\\Kinesis\\Thorlabs.MotionControl.GenericMotorCLI.dll")
@@ -30,7 +29,7 @@ def main():
         DeviceManagerCLI.BuildDeviceList()
 
         # create new device
-        serial_no = "90280775"  # Replace this line with your device's serial number
+        serial_no = "70280774"  # Replace this line with your device's serial number
 
         # Connect, begin polling, and enable
         device = BenchtopStepperMotor.CreateBenchtopStepperMotor(serial_no)
@@ -56,7 +55,7 @@ def main():
         print(device_info.Description)
 
         # Load any configuration settings needed by the controller/stage
-        channel_config = channel.LoadMotorConfiguration(serial_no) # If using BSC203, change serial_no to channel.DeviceID. 
+        channel_config = channel.LoadMotorConfiguration(channel.DeviceID) # If using BSC203, change serial_no to channel.DeviceID. 
         chan_settings = channel.MotorDeviceSettings
 
         channel.GetSettings(chan_settings)
