@@ -12,7 +12,6 @@ import clr
 clr.AddReference("C:\\Program Files\\Thorlabs\\Kinesis\\Thorlabs.MotionControl.DeviceManagerCLI.dll")
 clr.AddReference("C:\\Program Files\\Thorlabs\\Kinesis\\Thorlabs.MotionControl.GenericMotorCLI.dll")
 clr.AddReference("C:\\Program Files\\Thorlabs\\Kinesis\\Thorlabs.MotionControl.Benchtop.StepperMotorCLI.dll")
-
 from Thorlabs.MotionControl.DeviceManagerCLI import *
 from Thorlabs.MotionControl.GenericMotorCLI import *
 from Thorlabs.MotionControl.Benchtop.StepperMotorCLI import *
@@ -67,7 +66,12 @@ def main():
         channel.SetSettings(chan_settings, True, False)
 
         # Get parameters related to homing/zeroing/other
+        homing_params = channel.GetHomingParams()
+        homing_params.Velocity = Decimal(5.0)
+        homing_params.DOffset_Distance = Decimal(30)  # real world units
 
+        channel.SetHomingParams(homing_params)
+        
         # Home or Zero the device (if a motor/piezo)
         print("Homing Motor")
         channel.Home(60000)
@@ -75,11 +79,11 @@ def main():
         # Move the device to a new position
         channel.SetMoveRelativeDistance(Decimal(5.0))
 
-        print("Moving 10 times")
-        for i in range(10):
-            channel.MoveRelative(10000)
-            time.sleep(5)
-        print("Done")
+        # print("Moving 10 times")
+        # for i in range(1):
+        #     channel.MoveRelative(1000)
+        #     time.sleep(5)
+        # print("Done")
 
         # Stop Polling and Disconnect
         channel.StopPolling()
