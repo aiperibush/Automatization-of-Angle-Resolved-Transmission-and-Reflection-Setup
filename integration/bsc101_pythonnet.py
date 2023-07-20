@@ -68,12 +68,15 @@ def main():
         # Get parameters related to homing/zeroing/other
         homing_params = channel.GetHomingParams()
         homing_params.Velocity = Decimal(5.0)
-        homing_params.DOffset_Distance = Decimal(30)  # real world units
+        homing_params.OffsetDistance = Decimal(30)  # real world units
 
         channel.SetHomingParams(homing_params)
         
         # Home or Zero the device (if a motor/piezo)
         print("Homing Motor")
+        print("homing_params", homing_params)
+        print(dir(homing_params))
+        print(homing_params.OffsetDistance)
         channel.Home(60000)
         print("Done")
         # Move the device to a new position
