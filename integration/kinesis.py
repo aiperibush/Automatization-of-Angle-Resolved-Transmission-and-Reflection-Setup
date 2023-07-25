@@ -16,7 +16,6 @@ from Thorlabs.MotionControl.DeviceManagerCLI import *
 from Thorlabs.MotionControl.GenericMotorCLI import *
 from Thorlabs.MotionControl.Benchtop.StepperMotorCLI import *
 from System import Decimal  # necessary for real world units
-from System import String
 
 def configure(serial_no):
     
@@ -86,18 +85,20 @@ def homing_params (channel1, channel2, velocity):
     homing_params.Velocity = Decimal(velocity)
     homing_params.OffsetDistance = Decimal(9)  # real world units
     homing_params.set_Direction(homing_params.Direction.CounterClockwise)
+    # homing_params.set_Direction(homing_params.Direction.Clockwise)
         
     homing_params2 = channel2.GetHomingParams()
     homing_params2.Velocity = Decimal(velocity)
     homing_params2.OffsetDistance = Decimal(10)  # real world units
     homing_params2.set_Direction(homing_params2.Direction.CounterClockwise)
+    # homing_params2.set_Direction(homing_params2.Direction.Clockwise)
 
     channel1.SetHomingParams(homing_params)
     channel2.SetHomingParams(homing_params2)
         
     # Home or Zero the device (if a motor/piezo)
     # print("Homing Motor")
-    # print("homing_params", homing_params)
+    print("homing_params", homing_params.Direction)
     # print(dir(homing_params))
 
 def home1(channel1):        
@@ -137,14 +138,19 @@ def disconnect(channel1, channel2, device):
 channel1, channel2, device = configure('70280774')
 homing_params (channel1, channel2, 5)
 
+#print(f'Homing velocity: {homing_params.Velocity}\n'
+#      f'Homing direction: {homing_params.Direction}\n')
 # print(dir(channel1.SetMovementSettings))
 # jog_params=channel1.GetJogParams()
 
 
 # tlpm=connect()
 # wavelength(tlpm, 650)
+
+#print(dir(channel1))
+
 home1(channel1)
-channel1.SetRotationModes()
-channel1.MoveTo(Decimal(-30*0.18335), 100000)
+#channel1.SetPosition()
+channel1.MoveTo(Decimal(330*0.18335), 100000)
 # move1(channel1, 7000, 30)
 # move1(channel1, 7000, 30)
