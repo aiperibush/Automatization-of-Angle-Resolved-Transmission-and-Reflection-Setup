@@ -52,7 +52,7 @@ def configure(serial_no):
 
     # Get Device Information and display description
     device_info = channel1.GetDeviceInfo()
-    print(device_info.Description)
+    # print(device_info.Description)
 
     # Load any configuration settings needed by the controller/stage
     channel_config = channel1.LoadMotorConfiguration(channel1.DeviceID) # If using BSC203, change serial_no to channel.DeviceID. 
@@ -115,15 +115,13 @@ def home2(channel2):
 
 def move1(channel1, times, angle):
     # Move the device to a new position
-    channel1.SetMoveRelativeDistance(Decimal(0.18335*angle)) 
-    channel1.MoveRelative(times) 
+    channel1.MoveTo(Decimal(angle*0.18335), times)
     time.sleep(1)
 
 def move2(channel2, times, angle):
     # Move the device to a new position
-    channel2.SetMoveRelativeDistance(Decimal(0.18335*angle)) 
-    channel2.MoveRelative(times) 
-    time.sleep(3)
+    channel2.MoveTo(Decimal(angle*0.18335), times) 
+    time.sleep(1)
 
 def disconnect(channel1, channel2, device):
     # Stop Polling and Disconnect
@@ -135,8 +133,8 @@ def disconnect(channel1, channel2, device):
     # SimulationManager.Instance.UninitializeSimulations()
     ...
 
-channel1, channel2, device = configure('70280774')
-homing_params (channel1, channel2, 5)
+# channel1, channel2, device = configure('70280774')
+# homing_params (channel1, channel2, 5)
 
 #print(f'Homing velocity: {homing_params.Velocity}\n'
 #      f'Homing direction: {homing_params.Direction}\n')
@@ -149,8 +147,8 @@ homing_params (channel1, channel2, 5)
 
 #print(dir(channel1))
 
-home1(channel1)
-#channel1.SetPosition()
-channel1.MoveTo(Decimal(330*0.18335), 100000)
+# home1(channel1)
+# #channel1.SetPosition()
+# channel1.MoveTo(Decimal(330*0.18335), 100000)
 # move1(channel1, 7000, 30)
 # move1(channel1, 7000, 30)

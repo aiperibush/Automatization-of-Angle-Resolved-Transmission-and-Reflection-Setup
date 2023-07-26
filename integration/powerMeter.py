@@ -78,4 +78,3 @@ def measure(tlPM):
 # Close power meter connection.
 def disconnect(tlPM):
     tlPM.close()
-print('End program')
