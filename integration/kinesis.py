@@ -104,7 +104,7 @@ def homing_params (channel1, channel2, velocity):
 def home1(channel1):        
     channel1.Home(100000)
     print("Done")
-    time.sleep(1)
+    time.sleep(0.7)
 
 def home2(channel2):
     channel2.Home(100000)
