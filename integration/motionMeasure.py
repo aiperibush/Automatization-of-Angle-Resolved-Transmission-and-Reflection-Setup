@@ -17,9 +17,10 @@ from System import Decimal  # necessary for real world units
 channel1, channel2, device = configure('70280774')
 homing_params (channel1, channel2, 5)
 tlpm=connect()
-wavelength(tlpm, 900)
+wavelength(tlpm, 600)
 home1(channel1)
 
+print("start movement")
 move1(channel1, 60000, 330)
 measurements={"Angles":[], "Power":[]}
 for i in range(181):

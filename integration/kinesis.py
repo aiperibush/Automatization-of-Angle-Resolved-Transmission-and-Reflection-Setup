@@ -104,7 +104,7 @@ def homing_params (channel1, channel2, velocity):
 def home1(channel1):        
     channel1.Home(100000)
     print("Done")
-    time.sleep(0.7)
+    time.sleep(1)
 
 def home2(channel2):
     channel2.Home(100000)
@@ -116,7 +116,7 @@ def home2(channel2):
 def move1(channel1, times, angle):
     # Move the device to a new position
     channel1.MoveTo(Decimal(angle*0.18335), times)
-    time.sleep(1)
+    time.sleep(0.7)
 
 def move2(channel2, times, angle):
     # Move the device to a new position
@@ -141,14 +141,24 @@ def disconnect(channel1, channel2, device):
 # print(dir(channel1.SetMovementSettings))
 # jog_params=channel1.GetJogParams()
 
+# jog_params=channel1.GetJogParams()
+# jog_params.SetJogStepSize(Decimal(30*0.18335))
+# jog_params.SetJogVelocityParams(Decimal(10), Decimal(5)) 
+# channel1.SetJogParams(jog_params)
 
-# tlpm=connect()
-# wavelength(tlpm, 650)
 
-#print(dir(channel1))
 
+#channel1, channel2, device = configure('70280774')
+#homing_params (channel1, channel2, 5)
 # home1(channel1)
-# #channel1.SetPosition()
-# channel1.MoveTo(Decimal(330*0.18335), 100000)
-# move1(channel1, 7000, 30)
-# move1(channel1, 7000, 30)
+
+#channel1.SetJogStepSize(Decimal(30*0.18335))
+#channel1.SetJogVelocityParams(Decimal(10), Decimal(5)) 
+
+#new_direction_backward = MotorDirection.Backward
+
+# channel1.MoveJog('Backward', 10000)
+#channel1.MoveJog(new_direction_backward, 100000)
+#home1(channel1)
+
+print("done")

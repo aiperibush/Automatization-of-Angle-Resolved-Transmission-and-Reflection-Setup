@@ -24,8 +24,9 @@ def connect():
     print("Connected to device", i)
     print("Last calibration date: ",c_char_p(message.raw).value)
     print("")
-    return tlPM
     time.sleep(2)
+    return tlPM
+    
 
 
 
@@ -78,3 +79,7 @@ def measure(tlPM):
 # Close power meter connection.
 def disconnect(tlPM):
     tlPM.close()
+    
+    
+    
+    
