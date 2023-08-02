@@ -113,15 +113,10 @@ def home2(channel2):
     # print(homing_params.Direction.CounterClockwise.CompareTo(homing_params.Direction.Clockwise))
     # print(dir(homing_params.Direction))
 
-def move1(channel1, times, angle):
+def move(channel, times, angle):
     # Move the device to a new position
-    channel1.MoveTo(Decimal(angle*0.18335), times)
-    time.sleep(0.7)
-
-def move2(channel2, times, angle):
-    # Move the device to a new position
-    channel2.MoveTo(Decimal(angle*0.18335), times) 
-    time.sleep(1)
+    channel.MoveTo(Decimal(angle*0.18335), times)
+    time.sleep(0.4)
 
 def disconnect(channel1, channel2, device):
     # Stop Polling and Disconnect
