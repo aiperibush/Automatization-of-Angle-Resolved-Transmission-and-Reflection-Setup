@@ -19,21 +19,22 @@ from System import Decimal  # necessary for real world units
 
 channel1, channel2, device = configure('70280774')
 homing_params (channel1, channel2, 5)
+channel1.DeviceSettingsName = 'HDR50'
 tlpm=connect()
-wavelength(tlpm, 900)
+wavelength(tlpm, 532)
 home1(channel1)
 
 print("start movement")
-move(channel1, 60000, 270)
+move(channel1, 60000, 300)
 measurements={"Angles":[], "Power":[]}
 
 sns.set_theme(context="paper", style="ticks")
 # ax=sns.scatterplot(data=measurements, x="Angles", y="Power", color="chartreuse")
 
 plt.ion()
-for i in range(181):
-    move(channel1, 6000, 270+i)
-    measurements["Angles"].append(-90+i)
+for i in range(121):
+    move(channel1, 6000, 300+i)
+    measurements["Angles"].append(-60+i)
     measurements["Power"].append(measure(tlpm))
     plt.plot(measurements["Angles"], measurements["Power"], c='indigo')
     plt.title("Real Time plot")

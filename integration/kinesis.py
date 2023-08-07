@@ -129,19 +129,18 @@ def disconnect(channel1, channel2, device):
     ...
 
 # channel1, channel2, device = configure('70280774')
+# channel1.DeviceSettingsName = 'HDR50'
 # homing_params (channel1, channel2, 5)
 
-#print(f'Homing velocity: {homing_params.Velocity}\n'
-#      f'Homing direction: {homing_params.Direction}\n')
-# print(dir(channel1.SetMovementSettings))
+# # print(f'Homing velocity: {homing_params.Velocity}\n'
+# #      f'Homing direction: {homing_params.Direction}\n')
+# # print(dir(channel1.SetMovementSettings))
 # jog_params=channel1.GetJogParams()
-
-# jog_params=channel1.GetJogParams()
-# jog_params.SetJogStepSize(Decimal(30*0.18335))
-# jog_params.SetJogVelocityParams(Decimal(10), Decimal(5)) 
+# jog_params.set_StepSize(Decimal(30*0.18335))
+# jog_params.MaxVelocity=Decimal(10)
 # channel1.SetJogParams(jog_params)
 
-
+# channel1.MoveJog(MotorDirection.Backward, 100000)
 
 #channel1, channel2, device = configure('70280774')
 #homing_params (channel1, channel2, 5)
@@ -156,4 +155,4 @@ def disconnect(channel1, channel2, device):
 #channel1.MoveJog(new_direction_backward, 100000)
 #home1(channel1)
 
-print("done")
+# print("done")

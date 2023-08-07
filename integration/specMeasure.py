@@ -9,6 +9,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 import math
+import numpy as np
 
 clr.AddReference("C:\\Program Files\\Thorlabs\\Kinesis\\Thorlabs.MotionControl.DeviceManagerCLI.dll")
 clr.AddReference("C:\\Program Files\\Thorlabs\\Kinesis\\Thorlabs.MotionControl.GenericMotorCLI.dll")
@@ -23,16 +24,16 @@ homing_params (channel1, channel2, 5)
 
 def measure(start, end, step, integration):
     home1(channel1)
-    print("start movement")
+    # print("start movement")
     move(channel1, 60000, start)
     measurements={"Angles":[], "Wavelength":[], "Intensity":[]}
     spec=Connect()
-    measurements["Wavelength"]=spec.wavelengths()
+    measurements["Wavelength"].append(spec.wavelengths())
 
-    for i in range(math.floor(abs(end-start)/step)):
+    for i in range(math.floor((end-start)/step)): 
         move(channel1, 6000, start+(i*step))
-        measurements["Angles"].append(-start+i)
-        measurements["Intensity"].append(list(spectrometer(spec, integration)))
+        measurements["Angles"].append(-start+i) 
+        measurements["Intensity"].append(spectrometer(spec, integration))
         time.sleep(0.5)
     return measurements
 
@@ -45,10 +46,22 @@ def saveExcel(measurements, name):
     df=pd.DataFrame(measurements)
     df.to_excel(name)
 
-measurements=measure(300, 60, 1, 100000)
-print(len(measurements["Intensity"]))
-saveCSV(measurements, "testSpec.csv")
-    
+measurements=measure(60, 64, 1, 100000)
+grid=np.meshgrid(measurements["Wavelength"] ,measurements["Angles"])
+
+fig = plt.figure(1, figsize=(6, 9))
+ax = fig.add_subplot(111)
+print(np.shape(measurements["Intensity"]))
+               
+        #plt.pcolormesh(radii, lambdas, (tab1).transpose(), cmap = 'rainbow') #plt.cm.RdBu)
+# heatmap = ax.pcolormesh(measurements["Angles"], measurements["Wavelength"], 0, cmap = plt.cm.viridis, alpha=1) #plt.cm.RdBu)
+        #plt.title("Absorptance, Unit", pad = 50, fontsize=12)
+print(measurements)
+f, ax = plt.subplots(figsize=(9, 6))
+sns.heatmap(np.array(measurements["Intensity"]), cmap="mako", linewidths=0, ax=ax)
+plt.show()
+# saveExcel(measurements, "testSpec.xlsx")
+   
 channel1.StopPolling()
 channel2.StopPolling()
 device.Disconnect()

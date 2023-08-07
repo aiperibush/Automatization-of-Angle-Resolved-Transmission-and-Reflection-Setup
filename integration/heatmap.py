@@ -9,6 +9,7 @@ sns.set_theme()
 
 flights_long = sns.load_dataset("flights")
 flights = flights_long.pivot("month", "year", "passengers")
+print(flights)
 
 f, ax = plt.subplots(figsize=(9, 6))
 sns.heatmap(flights, cmap="mako", linewidths=0, ax=ax)
