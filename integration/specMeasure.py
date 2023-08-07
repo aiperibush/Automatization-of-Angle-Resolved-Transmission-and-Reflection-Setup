@@ -1,5 +1,5 @@
 from kinesis import *
-from powerMeter import *
+from spectrometer import *
 
 import os
 import time
@@ -8,6 +8,7 @@ import clr
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
+import math
 
 clr.AddReference("C:\\Program Files\\Thorlabs\\Kinesis\\Thorlabs.MotionControl.DeviceManagerCLI.dll")
 clr.AddReference("C:\\Program Files\\Thorlabs\\Kinesis\\Thorlabs.MotionControl.GenericMotorCLI.dll")
@@ -19,32 +20,22 @@ from System import Decimal  # necessary for real world units
 
 channel1, channel2, device = configure('70280774')
 homing_params (channel1, channel2, 5)
-tlpm=connect()
-wavelength(tlpm, 900)
-home1(channel1)
 
-print("start movement")
-move(channel1, 60000, 270)
-measurements={"Angles":[], "Power":[]}
+def measure(start, end, step, integration):
+    home1(channel1)
+    print("start movement")
+    move(channel1, 60000, start)
+    measurements={"Angles":[], "Wavelength":[], "Intensity":[]}
+    spec=Connect()
+    measurements["Wavelength"]=spec.wavelengths()
 
-sns.set_theme(context="paper", style="ticks")
-# ax=sns.scatterplot(data=measurements, x="Angles", y="Power", color="chartreuse")
+    for i in range(math.floor(abs(end-start)/step)):
+        move(channel1, 6000, start+(i*step))
+        measurements["Angles"].append(-start+i)
+        measurements["Intensity"].append(list(spectrometer(spec, integration)))
+        time.sleep(0.5)
+    return measurements
 
-plt.ion()
-for i in range(181):
-    move(channel1, 6000, 270+i)
-    measurements["Angles"].append(-90+i)
-    measurements["Power"].append(measure(tlpm))
-    plt.plot(measurements["Angles"], measurements["Power"], c='indigo')
-    plt.title("Real Time plot")
-    plt.xlabel("Angle (degrees)")
-    plt.ylabel("Power")
-    plt.pause(0.05)
-    
-plt.show()
-plt.savefig("graph.png")
-
-print(measurements)
 
 def saveCSV(measurements, name):
     df=pd.DataFrame(measurements)
@@ -53,10 +44,11 @@ def saveCSV(measurements, name):
 def saveExcel(measurements, name):
     df=pd.DataFrame(measurements)
     df.to_excel(name)
-    
-saveCSV(measurements, "thing.csv")
+
+measurements=measure(300, 60, 1, 100000)
+print(len(measurements["Intensity"]))
+saveCSV(measurements, "testSpec.csv")
     
 channel1.StopPolling()
 channel2.StopPolling()
 device.Disconnect()
-tlpm.close()

@@ -45,7 +45,7 @@ def configure(serial_no):
     # Start polling and enable
     channel1.StartPolling(250)  #250ms polling rate
     channel2.StartPolling(250)
-    time.sleep(10)
+    time.sleep(8)
     channel1.EnableDevice()
     channel2.EnableDevice()
     time.sleep(0.25)  # Wait for device to enable

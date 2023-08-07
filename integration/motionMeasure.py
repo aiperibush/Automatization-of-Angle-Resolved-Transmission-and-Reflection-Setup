@@ -54,7 +54,7 @@ def saveExcel(measurements, name):
     df=pd.DataFrame(measurements)
     df.to_excel(name)
     
-saveExcel(measurements, "900nm.xlsx")
+saveCSV(measurements, "thing.csv")
     
 channel1.StopPolling()
 channel2.StopPolling()
