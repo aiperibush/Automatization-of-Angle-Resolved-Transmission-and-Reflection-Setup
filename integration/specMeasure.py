@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import math
 import numpy as np
+from matplotlib.ticker import FuncFormatter
 
 clr.AddReference("C:\\Program Files\\Thorlabs\\Kinesis\\Thorlabs.MotionControl.DeviceManagerCLI.dll")
 clr.AddReference("C:\\Program Files\\Thorlabs\\Kinesis\\Thorlabs.MotionControl.GenericMotorCLI.dll")
@@ -28,11 +29,11 @@ def measure(start, end, step, integration):
     move(channel1, 60000, start)
     measurements={"Angles":[], "Wavelength":[], "Intensity":[]}
     spec=Connect()
-    measurements["Wavelength"].append(spec.wavelengths())
+    measurements["Wavelength"].append(['{:.2f}'.format(i) for i in spec.wavelengths()])
 
-    for i in range(math.floor((end-start)/step)): 
+    for i in range(math.floor(((360-start)+end)/step)): 
         move(channel1, 6000, start+(i*step))
-        measurements["Angles"].append(-start+i) 
+        measurements["Angles"].append((start+i)%360) 
         measurements["Intensity"].append(spectrometer(spec, integration))
         time.sleep(0.5)
     return measurements
@@ -46,19 +47,25 @@ def saveExcel(measurements, name):
     df=pd.DataFrame(measurements)
     df.to_excel(name)
 
-measurements=measure(60, 64, 1, 100000)
-grid=np.meshgrid(measurements["Wavelength"] ,measurements["Angles"])
+measurements=measure(300, 60, 1, 100000)
 
-fig = plt.figure(1, figsize=(6, 9))
-ax = fig.add_subplot(111)
-print(np.shape(measurements["Intensity"]))
+df=pd.DataFrame(measurements["Intensity"], index=tuple(measurements["Angles"]), columns=measurements["Wavelength"])
+pd.options.display.float_format="{:.2f}".format
+# df.update(df.columns.applymap('{:.2f}'.format))
+print(df)
+df.to_csv("test.csv", index=True)
+# grid=np.meshgrid(measurements["Wavelength"] ,measurements["Angles"])
+
+# fig = plt.figure(1, figsize=(6, 9))
+# ax = fig.add_subplot(111)
+# print(np.shape(measurements["Intensity"]))
                
         #plt.pcolormesh(radii, lambdas, (tab1).transpose(), cmap = 'rainbow') #plt.cm.RdBu)
 # heatmap = ax.pcolormesh(measurements["Angles"], measurements["Wavelength"], 0, cmap = plt.cm.viridis, alpha=1) #plt.cm.RdBu)
         #plt.title("Absorptance, Unit", pad = 50, fontsize=12)
-print(measurements)
-f, ax = plt.subplots(figsize=(9, 6))
-sns.heatmap(np.array(measurements["Intensity"]), cmap="mako", linewidths=0, ax=ax)
+plt.figure(figsize=(5,5))
+ax=sns.heatmap(df, cmap="mako", linewidths=0)
+# ax.xaxis.set_major_formatter(FuncFormatter('{:.2f}'.format))
 plt.show()
 # saveExcel(measurements, "testSpec.xlsx")
    
