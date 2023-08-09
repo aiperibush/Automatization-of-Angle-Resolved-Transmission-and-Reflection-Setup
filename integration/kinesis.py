@@ -71,7 +71,7 @@ def configure(serial_no):
 
     channel2.GetSettings(chan_settings)
 
-    channel_config.DeviceSettingsName = 'HS NRT150 Enc Stage 150mm'
+    channel_config.DeviceSettingsName = 'HDR50'
 
     channel_config.UpdateCurrentConfiguration()
 
@@ -128,9 +128,8 @@ def disconnect(channel1, channel2, device):
     # SimulationManager.Instance.UninitializeSimulations()
     ...
 
-# channel1, channel2, device = configure('70280774')
-# print(dir(device.DeviceSettingsName))
-# channel1.DeviceSettingsName = 'HDR50'
+channel1, channel2, device = configure('70280774')
+print(dir(device))
 # homing_params (channel1, channel2, 5)
 # home1(channel1)
 
@@ -141,20 +140,6 @@ def disconnect(channel1, channel2, device):
 # jog_params.set_StepSize(Decimal(30*0.18335))
 # jog_params.MaxVelocity=Decimal(10)
 # channel1.SetJogParams(jog_params)
-# channel1.DeviceSettingsName = 'HDR50'
-# channel1.MoveJog(MotorDirection.Forward, 100000)
+# # channel1.DeviceSettingsName = 'HDR50'
+# channel1.MoveJog(MotorDirection.Backward, 100000)
 
-#channel1, channel2, device = configure('70280774')
-#homing_params (channel1, channel2, 5)
-# home1(channel1)
-
-#channel1.SetJogStepSize(Decimal(30*0.18335))
-#channel1.SetJogVelocityParams(Decimal(10), Decimal(5)) 
-
-#new_direction_backward = MotorDirection.Backward
-
-# channel1.MoveJog('Backward', 10000)
-#channel1.MoveJog(new_direction_backward, 100000)
-#home1(channel1)
-
-# print("done")

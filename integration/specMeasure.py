@@ -23,7 +23,7 @@ from System import Decimal  # necessary for real world units
 channel1, channel2, device = configure('70280774')
 homing_params (channel1, channel2, 5)
 
-def measure(start, end, step, integration):
+def measure(start, end, step, integration): #no negative degree inputs, instead of -90 use 270. also don't mix up start and end
     home1(channel1)
     # print("start movement")
     move(channel1, 60000, start)
@@ -31,11 +31,24 @@ def measure(start, end, step, integration):
     spec=Connect()
     measurements["Wavelength"].append(['{:.2f}'.format(i) for i in spec.wavelengths()])
 
-    for i in range(math.floor(((360-start)+end)/step)): 
+    plt.ion()
+    grid_kws = {'width_ratios': (0.9, 0.05), 'wspace': 0.2}
+    fig, (ax, cbar_ax) = plt.subplots(1, 2, gridspec_kw = grid_kws, figsize = (10, 8))
+    ax.xaxis.set_tick_params(which='both', direction='out', length=1)
+    ax.yaxis.set_tick_params(which='both', direction='out', length=1)
+    ax.locator_params(axis='x', nbins=6)
+    ax.locator_params(axis='y', nbins=10)
+    for i in range(math.floor(((360-start)+end+1)/step)): 
         move(channel1, 6000, start+(i*step))
-        measurements["Angles"].append((start+i)%360) 
+        measurements["Angles"].append((-(360-start))+step*i) 
         measurements["Intensity"].append(spectrometer(spec, integration))
+        df=pd.DataFrame(measurements["Intensity"], index=tuple(measurements["Angles"]), columns=measurements["Wavelength"])
+        ax=sns.heatmap(df, ax=ax, cbar_ax = cbar_ax, cmap="mako", linewidths=0)
+        # fig.canvas.draw()
+        fig.canvas.flush_events()
         time.sleep(0.5)
+    plt.show()
+    df.to_csv("samplex1y1.csv", index=True)
     return measurements
 
 
@@ -53,21 +66,8 @@ df=pd.DataFrame(measurements["Intensity"], index=tuple(measurements["Angles"]), 
 pd.options.display.float_format="{:.2f}".format
 # df.update(df.columns.applymap('{:.2f}'.format))
 print(df)
-df.to_csv("test.csv", index=True)
 # grid=np.meshgrid(measurements["Wavelength"] ,measurements["Angles"])
 
-# fig = plt.figure(1, figsize=(6, 9))
-# ax = fig.add_subplot(111)
-# print(np.shape(measurements["Intensity"]))
-               
-        #plt.pcolormesh(radii, lambdas, (tab1).transpose(), cmap = 'rainbow') #plt.cm.RdBu)
-# heatmap = ax.pcolormesh(measurements["Angles"], measurements["Wavelength"], 0, cmap = plt.cm.viridis, alpha=1) #plt.cm.RdBu)
-        #plt.title("Absorptance, Unit", pad = 50, fontsize=12)
-plt.figure(figsize=(5,5))
-ax=sns.heatmap(df, cmap="mako", linewidths=0)
-# ax.xaxis.set_major_formatter(FuncFormatter('{:.2f}'.format))
-plt.show()
-# saveExcel(measurements, "testSpec.xlsx")
    
 channel1.StopPolling()
 channel2.StopPolling()
